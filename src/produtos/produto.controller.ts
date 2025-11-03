@@ -11,5 +11,25 @@ class ProdutoController {
         const produtos = await db.collection('produtos').find().toArray();
         res.status(200).json(produtos);
     }
+    async editar(req:Request, res:Response){
+        const { id } = req.params
+        const { nome, preco, descricao, urlfoto } = req.body
+        const update: any = {}
+        if(nome) update.nome = nome
+        if(preco) update.preco = preco
+        if(descricao) update.descricao = descricao
+        if(urlfoto) update.urlfoto = urlfoto
+        const ObjectId = require('mongodb').ObjectId
+        const resultado = await db.collection('produtos').updateOne({_id: new ObjectId(id)}, { $set: update })
+        if(resultado.matchedCount === 0) return res.status(404).json({mensagem: 'Produto não encontrado'})
+        res.status(200).json({mensagem: 'Produto atualizado'})
+    }
+    async excluir(req:Request, res:Response){
+        const { id } = req.params
+        const ObjectId = require('mongodb').ObjectId
+        const resultado = await db.collection('produtos').deleteOne({_id: new ObjectId(id)})
+        if(resultado.deletedCount === 0) return res.status(404).json({mensagem: 'Produto não encontrado'})
+        res.status(200).json({mensagem: 'Produto removido'})
+    }
 }
 export default new ProdutoController();
