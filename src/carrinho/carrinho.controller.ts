@@ -165,6 +165,17 @@ class CarrinhoController {
         if(!carrinho){
             return res.status(404).json({mensagem: 'Carrinho não encontrado'});
         }
+        // Recalcula o total com base nos itens para garantir que esteja atualizado
+        const total = carrinho.itens.reduce((soma, item) => soma + item.precoUnitario * item.quantidade, 0);
+        if (carrinho.total !== total) {
+            carrinho.total = total;
+            carrinho.dataAtualizacao = new Date();
+            // Atualiza apenas o total e a data de atualização no banco
+            await db.collection<Carrinho>("carrinhos").updateOne(
+                { usuarioId: usuarioId },
+                { $set: { total: carrinho.total, dataAtualizacao: carrinho.dataAtualizacao } }
+            );
+        }
         return res.status(200).json(carrinho);
     }
     async remover(req:Request, res:Response) {

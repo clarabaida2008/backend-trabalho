@@ -19,5 +19,7 @@ rotasAutenticadas.get("/produtos", produtoController.listar);
 //Ainda vamos ter que criar as rotasAutenticadas para carrinho e produtos
 rotasAutenticadas.post("/adicionarItem", carrinhoController.adicionarItem);
 //Tarefa para casa :)
+// Rota para listar o carrinho (retorna total recalculado)
+rotasAutenticadas.post("/carrinho", carrinhoController.listar);
 
 export default rotasAutenticadas;
