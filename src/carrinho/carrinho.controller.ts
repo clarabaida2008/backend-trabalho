@@ -159,10 +159,14 @@ class CarrinhoController {
         )
         return res.status(200).json(carrinho);
     }
-    async listar(req:Request, res:Response) {
-        const { usuarioId } = req.body;
+    async listar(req:RequestAuth, res:Response) {
+        const usuarioId = req.usuarioId
+
+        if(!usuarioId)
+            return res.status(401).json({mensagem: 'Token/usuarioId não fornecido'});
         const carrinho = await db.collection<Carrinho>("carrinhos").findOne({usuarioId: usuarioId});
         if(!carrinho){
+            console.log("Carrinho não encontrado para o usuarioId:", usuarioId);
             return res.status(404).json({mensagem: 'Carrinho não encontrado'});
         }
         // Recalcula o total com base nos itens para garantir que esteja atualizado

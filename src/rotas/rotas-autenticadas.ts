@@ -20,7 +20,7 @@ rotasAutenticadas.get("/produtos", produtoController.listar);
 rotasAutenticadas.post("/adicionarItem", carrinhoController.adicionarItem);
 //Tarefa para casa :)
 // Rota para listar o carrinho (retorna total recalculado)
-rotasAutenticadas.post("/carrinho", carrinhoController.listar);
+rotasAutenticadas.get("/carrinho", carrinhoController.listar);
 // Rota para remover todo o carrinho do usuário (requisição autenticada)
 rotasAutenticadas.delete("/carrinho", carrinhoController.remover);
 
