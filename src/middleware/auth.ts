@@ -4,6 +4,7 @@ import {Request, Response, NextFunction} from 'express'
 
 interface RequestAuth extends Request{
     usuarioId?:string
+    tipo?:string
 }
 
 function Auth(req:RequestAuth,res:Response,next:NextFunction){
@@ -16,10 +17,11 @@ function Auth(req:RequestAuth,res:Response,next:NextFunction){
             console.log(err)
             return res.status(401).json({mensagem:"Token inválido!"})
         }
-        if(typeof decoded==="string"||!decoded||!("usuarioId" in decoded))
+        if(typeof decoded==="string"||!decoded||!("usuarioId" in decoded)||!("tipo" in decoded))
             return res.status(401).json({mensagem:"Payload inválido!"})
 
         req.usuarioId = decoded.usuarioId;
+        req.tipo = decoded.tipo;
         next()
 
     })

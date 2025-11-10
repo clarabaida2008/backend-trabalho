@@ -21,5 +21,7 @@ rotasAutenticadas.post("/adicionarItem", carrinhoController.adicionarItem);
 //Tarefa para casa :)
 // Rota para listar o carrinho (retorna total recalculado)
 rotasAutenticadas.post("/carrinho", carrinhoController.listar);
+// Rota para remover todo o carrinho do usuário (requisição autenticada)
+rotasAutenticadas.delete("/carrinho", carrinhoController.remover);
 
 export default rotasAutenticadas;

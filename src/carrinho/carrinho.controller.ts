@@ -178,8 +178,12 @@ class CarrinhoController {
         }
         return res.status(200).json(carrinho);
     }
-    async remover(req:Request, res:Response) {
-        const { usuarioId } = req.body;
+    async remover(req:RequestAuth, res:Response) {
+        // Preferir o usuarioId obtido pelo middleware de autenticação
+        const usuarioId = req.usuarioId || (req.body && req.body.usuarioId);
+        if(!usuarioId)
+            return res.status(401).json({mensagem: 'Token/usuarioId não fornecido'});
+
         const carrinho = await db.collection<Carrinho>("carrinhos").findOne({usuarioId: usuarioId});
         if(!carrinho){
             return res.status(404).json({mensagem: 'Carrinho não encontrado'});

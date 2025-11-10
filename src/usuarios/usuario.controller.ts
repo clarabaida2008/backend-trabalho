@@ -12,7 +12,7 @@ class UsuarioController {
         const usuario = {nome,idade,email,senha:senhaCriptografada}
         const resultado = await db.collection('usuarios')
             .insertOne(usuario)
-        res.status(201).json({ ...usuario, _id: resultado.insertedId })
+        res.status(201).json({ ...usuario, _id: resultado.insertedId,tipo:"comum"})
     }
     async listar(req: Request, res: Response) {
         const usuarios = await db.collection('usuarios').find().toArray();
@@ -33,7 +33,7 @@ class UsuarioController {
             return res.status(400).json({mensagem:"Senha Inválida!"})
         //criar um TOKEN
         const token = 
-        jwt.sign({usuarioId:usuario._id},process.env.JWT_SECRET!,{expiresIn:'1h'})
+        jwt.sign({usuarioId:usuario._id,tipo:usuario.tipo},process.env.JWT_SECRET!,{expiresIn:'1h'})
         //Devolver token
         res.status(200).json({token})
     }
