@@ -1,9 +1,11 @@
 import { Router} from "express";
+import usuarioController from "../usuarios/usuario.controller.js";
+import produtoController from "../produtos/produto.controller.js";
 
 const rotasAdmin = Router();
 
-//Criando rotasAutenticadas para os usuários
-//rotasAdmin.post("/listarUsuarios", usuarioController.listarUsuarios);
+rotasAdmin.get("/usuarios", usuarioController.listar);
+rotasAdmin.post("/produtos", produtoController.adicionar);
 
 
 export default rotasAdmin;

@@ -104,8 +104,12 @@ class CarrinhoController {
         )
         res.status(200).json(carrinho);
     }
-    async removerItem(req:Request, res:Response) {
-        const { produtoId , usuarioId } = req.body;
+    async removerItem(req:RequestAuth, res:Response) {
+        const { produtoId  } = req.body;
+        const usuarioId = req.usuarioId
+        if(!usuarioId)
+            return res.status(401).json({mensagem:"Token não foi passado para remover do carrinho"})
+    
         //Faça o removerItem
         //Do melhor jeito
 

@@ -6,25 +6,10 @@ import carrinhoController from "../carrinho/carrinho.controller.js";
 
 const rotasAutenticadas = Router();
 
-//Criando rotasAutenticadas para os usuários
-rotasAutenticadas.post("/usuarios", usuarioController.adicionar);
-rotasAutenticadas.get("/usuarios", usuarioController.listar);
-
-
-//rotasAutenticadas para produtos
-rotasAutenticadas.post("/produtos", produtoController.adicionar);
-rotasAutenticadas.get("/produtos", produtoController.listar);
-
-
-//Ainda vamos ter que criar as rotasAutenticadas para carrinho e produtos
 rotasAutenticadas.post("/adicionarItem", carrinhoController.adicionarItem);
-//Tarefa para casa :)
-// Rota para listar o carrinho (retorna total recalculado)
 rotasAutenticadas.get("/carrinho", carrinhoController.listar);
-// Rota para remover todo o carrinho do usuário (requisição autenticada)
 rotasAutenticadas.delete("/carrinho", carrinhoController.remover);
-
-// Nova rota: atualizar quantidade de item
 rotasAutenticadas.put("/carrinho/quantidade", carrinhoController.atualizarQuantidade);
+rotasAutenticadas.post("/removerItem", carrinhoController.removerItem);
 
 export default rotasAutenticadas;
