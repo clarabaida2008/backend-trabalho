@@ -24,4 +24,7 @@ rotasAutenticadas.get("/carrinho", carrinhoController.listar);
 // Rota para remover todo o carrinho do usuário (requisição autenticada)
 rotasAutenticadas.delete("/carrinho", carrinhoController.remover);
 
+// Nova rota: atualizar quantidade de item
+rotasAutenticadas.put("/carrinho/quantidade", carrinhoController.atualizarQuantidade);
+
 export default rotasAutenticadas;

@@ -136,29 +136,56 @@ class CarrinhoController {
         return res.status(200).json(carrinhoAtualizado);
 
     }
-    async atualizarQuantidade(req:Request, res:Response) {
-        const { produtoId , usuarioId, quantidade  } = req.body;
-        const carrinho = await db.collection<Carrinho>("carrinhos").findOne({usuarioId: usuarioId});
-        if(!carrinho){
-            return res.status(404).json({mensagem: 'Carrinho não encontrado'});
-        }
-        const itemExistente = carrinho.itens.find(item => item.produtoId === produtoId);
-        if(!itemExistente){
-            return res.status(404).json({mensagem: 'Item não encontrado'});
-        }
-        itemExistente.quantidade = quantidade;
-        carrinho.total = carrinho.itens.reduce((total, item) => total + item.precoUnitario * item.quantidade, 0);
-        carrinho.dataAtualizacao = new Date();
-        await db.collection<Carrinho>("carrinhos").updateOne({usuarioId: usuarioId},
-            {$set: {
-                itens: carrinho.itens, 
-                total: carrinho.total, 
-                dataAtualizacao: carrinho.dataAtualizacao
-            }
-            }
-        )
-        return res.status(200).json(carrinho);
+    
+    async atualizarQuantidade(req: RequestAuth, res: Response) {
+  const { produtoId, quantidade } = req.body;
+  const usuarioId = req.usuarioId;
+
+  if (!usuarioId)
+    return res.status(401).json({ mensagem: 'Token/usuarioId não fornecido' });
+
+  if (!produtoId || quantidade === undefined)
+    return res.status(400).json({ mensagem: 'ProdutoId e quantidade são obrigatórios' });
+
+  const carrinho = await db.collection<Carrinho>("carrinhos").findOne({ usuarioId });
+  if (!carrinho)
+    return res.status(404).json({ mensagem: 'Carrinho não encontrado' });
+
+  const itemExistente = carrinho.itens.find(item => item.produtoId === produtoId);
+  if (!itemExistente)
+    return res.status(404).json({ mensagem: 'Item não encontrado' });
+
+  if (quantidade <= 0) {
+    carrinho.itens = carrinho.itens.filter(item => item.produtoId !== produtoId);
+  } else {
+    itemExistente.quantidade = quantidade;
+  }
+
+  //  Recalcula total
+  carrinho.total = Math.max(
+    0,
+    carrinho.itens.reduce(
+      (total, item) => total + item.precoUnitario * item.quantidade,
+      0
+    )
+  );
+
+  carrinho.dataAtualizacao = new Date();
+
+  await db.collection<Carrinho>("carrinhos").updateOne(
+    { usuarioId },
+    {
+      $set: {
+        itens: carrinho.itens,
+        total: carrinho.total,
+        dataAtualizacao: carrinho.dataAtualizacao
+      }
     }
+  );
+
+  return res.status(200).json(carrinho);
+}
+
     async listar(req:RequestAuth, res:Response) {
         const usuarioId = req.usuarioId
 

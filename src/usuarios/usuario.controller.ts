@@ -27,7 +27,7 @@ class UsuarioController {
         //Verifica se o usuário e senha estão corretos no banco.
         const usuario = await db.collection("usuarios").findOne({email})
         if(!usuario)
-            return res.status(400).json({mensagem:"Usuário incorreto!"})
+            return res.status(400).json({mensagem:"Usuário Incorreto!"})
         const senhaValida = await bcrypt.compare(senha,usuario.senha)
         if(!senhaValida)
             return res.status(400).json({mensagem:"Senha Inválida!"})
