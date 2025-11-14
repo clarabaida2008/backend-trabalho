@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 class UsuarioController {
-  
+
     async adicionar(req: Request, res: Response) {
         const { nome, idade, email, senha, tipo } = req.body;
 

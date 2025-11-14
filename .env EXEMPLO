@@ -1,8 +1,0 @@
-DBHOST=localhost
-DBPASSWORD=""
-DBUSER=root
-DBNAME=teste
-DBPORT=3306
-MONGO_URI="mongodb://localhost:27017/"
-MONGO_DB="bancoaula"
-JWT_SECRET="Minha Secret muito segura"

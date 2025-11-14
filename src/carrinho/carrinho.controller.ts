@@ -26,6 +26,7 @@ interface Produto {
 
 interface RequestAuth extends Request {
     usuarioId?: string;
+    tipo?: string;
 }
 
 class CarrinhoController {
@@ -217,13 +218,32 @@ class CarrinhoController {
     }
 
     // 🔒 Listar todos os carrinhos (rota admin)
-    async listarCarrinhos(req: Request, res: Response) {
+    async listarCarrinhos(req: RequestAuth, res: Response) {
         const carrinhos = await db.collection<Carrinho>("carrinhos").find().toArray();
 
         if (!carrinhos || carrinhos.length === 0)
             return res.status(404).json({ mensagem: "Nenhum carrinho cadastrado." });
 
         return res.status(200).json(carrinhos);
+    }
+
+    // 🔒 Excluir carrinho por usuarioId (rota admin)
+    async excluirCarrinhoAdmin(req: RequestAuth, res: Response) {
+        const { usuarioId } = req.params;
+
+        if (!usuarioId)
+            return res.status(400).json({ mensagem: "ID do usuário é obrigatório." });
+
+        const carrinho = await db.collection<Carrinho>("carrinhos").findOne({ usuarioId });
+        if (!carrinho)
+            return res.status(404).json({ mensagem: "Carrinho não encontrado para este usuário." });
+
+        const resultado = await db.collection<Carrinho>("carrinhos").deleteOne({ usuarioId });
+
+        if (resultado.deletedCount === 0)
+            return res.status(500).json({ mensagem: "Erro ao excluir o carrinho." });
+
+        return res.status(200).json({ mensagem: "Carrinho excluído com sucesso!" });
     }
 
 }
