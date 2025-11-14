@@ -216,26 +216,16 @@ class CarrinhoController {
         return res.status(200).json({ mensagem: "Seu carrinho foi esvaziado com sucesso!" });
     }
 
-    // ✅ Listar todos os carrinhos (apenas ADMIN)
-    async listarTodos(req: RequestAuth, res: Response) {
-        const usuario = (req as any).usuario;
-
-        if (!usuario || usuario.tipo !== "ADMIN")
-            return res.status(403).json({ mensagem: "Acesso negado. Apenas administradores podem listar todos os carrinhos." });
-
+    // 🔒 Listar todos os carrinhos (rota admin)
+    async listarCarrinhos(req: Request, res: Response) {
         const carrinhos = await db.collection<Carrinho>("carrinhos").find().toArray();
+
         if (!carrinhos || carrinhos.length === 0)
-            return res.status(404).json({ mensagem: "Nenhum carrinho encontrado no sistema." });
+            return res.status(404).json({ mensagem: "Nenhum carrinho cadastrado." });
 
-        const usuarios = await db.collection("usuarios").find().toArray();
-
-        const resultado = carrinhos.map(c => {
-            const dono = usuarios.find(u => u._id.toString() === c.usuarioId);
-            return { ...c, nomeUsuario: dono ? dono.nome : "Usuário não encontrado" };
-        });
-
-        return res.status(200).json(resultado);
+        return res.status(200).json(carrinhos);
     }
+
 }
 
 export default new CarrinhoController();

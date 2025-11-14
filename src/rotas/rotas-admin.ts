@@ -7,6 +7,8 @@ const rotasAdmin = Router();
 
 rotasAdmin.get("/usuarios", usuarioController.listar);
 rotasAdmin.post("/produtos", produtoController.adicionar);
+rotasAdmin.delete("/carrinho", carrinhoController.removerItem);
+rotasAdmin.get("/listarCarrinhos", carrinhoController.listarCarrinhos);
 
 
 export default rotasAdmin;
