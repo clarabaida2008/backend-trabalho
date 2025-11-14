@@ -9,10 +9,11 @@ class UsuarioController {
             return res.status(400).json({mensagem:"Dados incompletos (nome,email,senha,idade)"})
         }
         const senhaCriptografada = await bcrypt.hash(senha,10)
-        const usuario = {nome,idade,email,senha:senhaCriptografada}
+        // garantir que tipo seja armazenado (comum por padrão)
+        const usuario = {nome,idade,email,senha:senhaCriptografada,tipo:'comum'}
         const resultado = await db.collection('usuarios')
             .insertOne(usuario)
-        res.status(201).json({ ...usuario, _id: resultado.insertedId,tipo:"comum"})
+        res.status(201).json({ ...usuario, _id: resultado.insertedId })
     }
     async listar(req: Request, res: Response) {
         const usuarios = await db.collection('usuarios').find().toArray();
@@ -32,8 +33,8 @@ class UsuarioController {
         if(!senhaValida)
             return res.status(400).json({mensagem:"Senha Inválida!"})
         //criar um TOKEN
-        const token = 
-        jwt.sign({usuarioId:usuario._id,tipo:usuario.tipo},process.env.JWT_SECRET!,{expiresIn:'1h'})
+        // incluir nome e tipo no payload para uso no frontend
+        const token = jwt.sign({usuarioId:usuario._id,tipo:usuario.tipo||'comum',nome:usuario.nome},process.env.JWT_SECRET!,{expiresIn:'1h'})
         //Devolver token
         res.status(200).json({token})
     }
