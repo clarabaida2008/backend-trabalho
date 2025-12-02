@@ -10,7 +10,6 @@ rotasAutenticadas.delete("/carrinho", carrinhoController.remover);
 rotasAutenticadas.put("/carrinho/quantidade", carrinhoController.atualizarQuantidade);
 rotasAutenticadas.post("/removerItem", carrinhoController.removerItem);
 rotasAutenticadas.delete("/carrinho/todos", carrinhoController.excluirCarrinhoInteiro);
-
-rotasAutenticadas.post("/criar-pagamento-cartao", pagamentoController.adicionarPagamento);
+rotasAutenticadas.post("/pagamento", pagamentoController.adicionarPagamento);
 
 export default rotasAutenticadas;
